@@ -1,0 +1,21 @@
+cmake_minimum_required(VERSION 3.25)
+project(peregrine VERSION 0.1.0 LANGUAGES CXX)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+# Strict warnings, applied only to targets that opt in (our code, never third-party code)
+add_library(peregrine_warnings INTERFACE)
+target_compile_options(peregrine_warnings INTERFACE -Wall -Wextra -Wpedantic -Werror)
+
+# The core library: everything PEREGRINE does will live here
+add_library(peregrine src/version.cpp)
+target_include_directories(peregrine PUBLIC include)
+target_compile_definitions(peregrine PRIVATE PEREGRINE_VERSION="${PROJECT_VERSION}")
+target_link_libraries(peregrine PRIVATE peregrine_warnings)
+
+# A thin command-line front end over the library
+add_executable(peregrine-cli tools/peregrine-cli/main.cpp)
+target_link_libraries(peregrine-cli PRIVATE peregrine peregrine_warnings)

@@ -1,0 +1,9 @@
+cat > .gitignore <<'EOF'
+build/
+.DS_Store
+.venv/
+.env
+*.pcap
+*.pcapng
+data/
+EOF
